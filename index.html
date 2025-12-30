@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Document Folder</title>
+
+    <!-- PWA manifest 연결 (상대경로) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@700;800;900&display=swap');
+        
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --accent-blue: #2563eb;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 아이패드 최적화: 모든 텍스트 굵게 유지 */
+        * {
+            font-weight: 800 !important;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Checklist Item */
+        .check-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+        }
+        .check-item:hover {
+            border-color: var(--accent-blue);
+            background-color: #f8fafc;
+        }
+        .checked {
+            background-color: #f1f5f9;
+            color: #94a3b8 !important;
+            border-color: #e2e8f0;
+        }
+        .checked .checkbox-box {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        .checked .checkbox-box svg {
+            display: block;
+        }
+
+        .checkbox-box {
+            border: 3px solid #94a3b8;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        /* Briefing Inputs */
+        .input-group label {
+            font-size: 1.15rem; 
+            color: #1e293b;
+            margin-bottom: 0.4rem;
+            display: block;
+            text-transform: uppercase;
+        }
+        .input-group input, 
+        .input-group select, 
+        .input-group textarea {
+            background-color: #ffffff;
+            border: 2px solid var(--border-color);
+            color: var(--accent-blue);
+            font-size: 1.15rem; 
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Tabs */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Section Header */
+        .section-header {
+            font-size: 1.5rem;
+            font-weight: 900 !important;
+            border-left: 6px solid var(--accent-blue);
+            padding-left: 0.8rem;
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white border-b-2 border-slate-200 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <h1 class="text-2xl font-black tracking-tighter text-slate-900 uppercase whitespace-nowrap">FLIGHT DOCUMENT FOLDER</h1>
+                <nav class="flex gap-2 w-full lg:w-auto">
+                    <button id="btn-checklist" onclick="switchTab('checklist')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-blue-600 text-white shadow-md text-lg uppercase whitespace-nowrap">
+                        PRE-BRIEFING
+                    </button>
+                    <button id="btn-briefing" onclick="switchTab('briefing')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-slate-200 text-slate-600 border border-slate-300 text-lg uppercase whitespace-nowrap">
+                        JOINT BRIEFING
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-8">
+        
+        <!-- Tab 1: PRE-BRIEFING -->
+        <div id="tab-checklist" class="tab-content active">
+            <!-- Progress Tracker -->
+            <div class="mb-8 bg-white p-6 rounded-[2rem] shadow-soft border-2 border-slate-100">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <h2 class="text-lg font-black text-slate-900 uppercase">CHECKLIST PROGRESS</h2>
+                        <p class="text-md font-bold text-slate-500 mt-1">안전 운항을 위해 모든 항목을 점검하십시오.</p>
+                    </div>
+                    <span id="progress-text" class="text-5xl font-black text-blue-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-6 overflow-hidden border border-slate-200">
+                    <div id="progress-bar" class="bg-blue-600 h-full rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- 1. Show up & Alcohol Test -->
+                <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
+                        <h3 class="section-header text-slate-800 uppercase">Show up & Alcohol Test</h3>
+                    </div>
+                    <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 1 (메일, SMS 수신여부)</span>
+                        </div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 2 (메일, SMS 수신여부)</span>
+                        </div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 1 (메일, SMS 수신여부)</span>
+                        </div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 2 (메일, SMS 수신여부)</span>
+                        </div>
+                        <div class="check-item p-4 px-6 rounded-2xl md:col-span-2" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-bold text-slate-800 whitespace-nowrap">DH (메일, SMS 수신여부)</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. 필수 휴대품목 -->
+                <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
+                        <h3 class="section-header text-slate-800">필수 휴대품목 점검</h3>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공면장 / EPTA</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">신체검사증명서</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공 무선 통신사 자격증 (유효일자)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여권 / VISA</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">회사 ID / 승무원등록증</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAT II/III Certificate</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Portable EFB Update (충전상태 80% 이상)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Flash Light (기장)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여분의 안경 (해당 승무원)</span></div>
+                    </div>
+                </section>
+
+                <!-- 3. 운항 Briefing 확인사항 -->
+                <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
+                        <h3 class="section-header text-slate-800">운항 Briefing 확인사항</h3>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">기상 (출발지, 목적지, 교체공항) </span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">NOTAM </span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">OFP</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">부정기 운항 시 영공통과 허가번호</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">목적지 Landing Permission No</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">최근 공시(Notice) 확인</span></div>
+                    </div>
+                </section>
+
+                <!-- 4. 개인별 이/착륙 만료 예정일 -->
+                <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
+                        <h3 class="section-header text-slate-800">개인별 이/착륙 만료 예정일 점검</h3>
+                    </div>
+                    <div class="p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-black text-slate-800">CAPT 1</span>
+                        </div>
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-black text-slate-800">CAPT 2</span>
+                        </div>
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-black text-slate-800">F/O 1</span>
+                        </div>
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-black text-slate-800">F/O 2</span>
+                        </div>
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                            <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
+                            <span class="text-lg font-black text-slate-800">DH</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. 건강상태 확인 -->
+                <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
+                    <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
+                        <h3 class="section-header text-slate-800">건강상태 확인</h3>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 금지 의약품 복용 여부</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 수행 적합 상태 (신체적,정신적 )</span></div>
+                    </div>
+                </section>
+
+                <div class="flex justify-center pt-4">
+                    <button onclick="resetAll()" class="px-10 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-2xl transition-all border-2 border-slate-300 text-lg uppercase shadow-md">
+                        RESET ALL CHECKLIST
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: JOINT BRIEFING -->
+        <div id="tab-briefing" class="tab-content">
+            <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-soft border-2 border-slate-100">
+                <h2 class="text-3xl font-black text-slate-900 mb-8 flex items-center gap-4 uppercase">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    JOINT BRIEFING
+                </h2>
+
+                <div class="space-y-10">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="input-group">
+                            <label>날짜 (DATE)</label>
+                            <input type="date" id="input-date">
+                        </div>
+                        <div class="input-group">
+                            <label>편명 (FLIGHT NO.)</label>
+                            <div class="flex">
+                                <span class="bg-slate-100 border-2 border-slate-300 border-r-0 rounded-l-xl px-4 flex items-center text-lg font-black text-slate-600">YP</span>
+                                <select id="input-flight-select" class="rounded-l-none" onchange="toggleFlightInput()">
+                                    <option value="101">101</option><option value="102">102</option><option value="103">103</option><option value="104">104</option><option value="111">111</option><option value="112">112</option><option value="131">131</option><option value="132">132</option><option value="151">151</option><option value="152">152</option><option value="601">601</option><option value="602">602</option><option value="621">621</option><option value="622">622</option><option value="651">651</option><option value="652">652</option><option value="731">731</option><option value="732">732</option><option value="801">801</option><option value="802">802</option><option value="5201">5201</option><option value="5202">5202</option><option value="5211">5211</option><option value="5212">5212</option><option value="5245">5245</option><option value="5246">5246</option><option value="5623">5623</option><option value="5624">5624</option><option value="5671">5671</option><option value="5672">5672</option>
+                                    <option value="manual">직접입력</option>
+                                </select>
+                                <input type="text" id="input-flight-manual" class="hidden rounded-l-none" placeholder="번호 입력">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="input-group">
+                            <label>기번 (TAIL NO.)</label>
+                            <select id="input-tail">
+                                <option value="8387">8387</option><option value="8388">8388</option><option value="8389">8389</option><option value="8516">8516</option><option value="8517">8517</option><option value="8518">8518</option><option value="8701">8701</option><option value="8702">8702</option><option value="8703">8703</option><option value="8704">8704</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>게이트 (GATE)</label>
+                            <input type="text" id="input-gate" placeholder="예: 252">
+                        </div>
+                    </div>
+
+                    <hr class="border-t-2 border-slate-100">
+
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="input-group">
+                            <label>기장 (CAPTAIN 1/2/3)</label>
+                            <div class="space-y-2">
+                                <input type="text" id="input-capt1" placeholder="기장 1">
+                                <input type="text" id="input-capt2" placeholder="기장 2">
+                                <input type="text" id="input-capt3" placeholder="기장 3">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>부기장 (F/O 1/2/3)</label>
+                            <div class="space-y-2">
+                                <input type="text" id="input-fo1" placeholder="부기장 1">
+                                <input type="text" id="input-fo2" placeholder="부기장 2">
+                                <input type="text" id="input-fo3" placeholder="부기장 3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-t-2 border-slate-100">
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="input-group">
+                            <label>PAX</label>
+                            <input type="number" id="input-pax" placeholder="0">
+                        </div>
+                        
+                        <!-- 보안 등급: 각 옵션 및 선택된 상태에 색상 적용 -->
+                        <div class="input-group">
+                            <label>보안 등급</label>
+                            <select id="input-security" onchange="updateSecurityColor()">
+                                <option value="GREEN" style="color: #059669;">GREEN</option>
+                                <option value="BLUE" style="color: #2563eb;">BLUE</option>
+                                <option value="YELLOW" style="color: #d97706;">YELLOW</option>
+                                <option value="ORANGE" style="color: #ea580c;">ORANGE</option>
+                                <option value="RED" style="color: #dc2626;">RED</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>고도 (ALTITUDE - FL)</label>
+                            <div class="flex flex-col gap-2">
+                                <select id="input-altitude" onchange="toggleManualInput('input-altitude', 'input-altitude-manual')">
+                                    <option value="FL290">FL290</option><option value="FL300">FL300</option><option value="FL310">FL310</option><option value="FL320">FL320</option><option value="FL330">FL330</option><option value="FL340">FL340</option>
+                                    <option value="FL350">FL350</option>
+                                    <option value="manual">직접입력</option>
+                                    <option value="FL360">FL360</option><option value="FL370">FL370</option><option value="FL380">FL380</option><option value="FL390">FL390</option><option value="FL400">FL400</option><option value="FL410">FL410</option>
+                                </select>
+                                <input type="text" id="input-altitude-manual" class="hidden" placeholder="고도 직접 입력">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="input-group">
+                            <label>비행 시간 (FLIGHT TIME)</label>
+                            <input type="text" id="input-duration" placeholder="HH:MM (예: 02:30)">
+                        </div>
+                        <div class="input-group">
+                            <label>ETA (도착예정)</label>
+                            <input type="time" id="input-eta">
+                        </div>
+                    </div>
+
+                    <hr class="border-t-2 border-slate-100">
+
+                    <!-- Weather Information -->
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Weather Information</h3>
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="input-group">
+                                    <label>출발지 기상 (DEP)</label>
+                                    <div class="space-y-2">
+                                        <select id="input-dep-wx-select" onchange="toggleManualInput('input-dep-wx-select', 'input-dep-wx-manual')">
+                                            <option value="CLEAR" selected>CLEAR</option><option value="CAVOK">CAVOK</option><option value="manual">직접입력</option>
+                                        </select>
+                                        <input type="text" id="input-dep-wx-manual" class="hidden" placeholder="기상 직접 입력">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>도착지 기상 (ARR)</label>
+                                    <div class="space-y-2">
+                                        <select id="input-arr-wx-select" onchange="toggleManualInput('input-arr-wx-select', 'input-arr-wx-manual')">
+                                            <option value="CLEAR" selected>CLEAR</option><option value="CAVOK">CAVOK</option><option value="manual">직접입력</option>
+                                        </select>
+                                        <input type="text" id="input-arr-wx-manual" class="hidden" placeholder="기상 직접 입력">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>항로 기상 (ENROUTE)</label>
+                                <input type="text" id="input-route-wx" placeholder="Generally Calm / Tail wind">
+                            </div>
+                            <div class="input-group">
+                                <label>TURBULENCE</label>
+                                <input type="text" id="input-turb" placeholder="예: 01:20-01:45 (MOD)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-t-2 border-slate-100">
+
+                    <!-- Additional Procedures -->
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Additional Procedures</h3>
+                        <div class="space-y-6">
+                            <div class="input-group"><label>PASSENGER SIGN</label><input type="text" id="input-pax-sign" placeholder="이륙/착륙 시 승객 사인 절차"></div>
+                            
+                            <div class="input-group">
+                                <label>조종실 출입 절차 (COCKPIT ENTRY PROCEDURE)</label>
+                                <div class="space-y-2">
+                                    <select id="input-cockpit-select" onchange="toggleManualInput('input-cockpit-select', 'input-cockpit-manual')">
+                                        <option value="Normal Procedure" selected>Normal Procedure</option><option value="manual">직접입력</option>
+                                    </select>
+                                    <input type="text" id="input-cockpit-manual" class="hidden" placeholder="직접 입력">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Sterile Cockpit Procedure</label>
+                                <div class="space-y-2">
+                                    <select id="input-sterile-select" onchange="toggleManualInput('input-sterile-select', 'input-sterile-manual')">
+                                        <option value="5 Min, Pilot Alert" selected>5 Min, Pilot Alert</option>
+                                        <option value="manual">직접입력</option>
+                                    </select>
+                                    <input type="text" id="input-sterile-manual" class="hidden" placeholder="직접 입력">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>이륙단념 (RTO)</label>
+                                <div class="space-y-2">
+                                    <select id="input-rto-select" onchange="toggleManualInput('input-rto-select', 'input-rto-manual')">
+                                        <option value="Attention Crew At Station" selected>Attention Crew At Station</option><option value="manual">직접입력</option>
+                                    </select>
+                                    <input type="text" id="input-rto-manual" class="hidden" placeholder="직접 입력">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>비상시 조종실과 연락 (HIJACK)</label>
+                                <div class="space-y-2">
+                                    <select id="input-hijack-select" onchange="toggleManualInput('input-hijack-select', 'input-hijack-manual')">
+                                        <option value="Emergency Bell 3 Times" selected>Emergency Bell 3 Times</option><option value="manual">직접입력</option>
+                                    </select>
+                                    <input type="text" id="input-hijack-manual" class="hidden" placeholder="직접 입력">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label>승객관련 협의사항</label>
+                                <textarea id="input-pax-consult" rows="2" placeholder="환자, Deportee, Deadheading Crew, 범죄자 호송"></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label>기타 비행에 필요한 사항</label>
+                                <div class="space-y-2">
+                                    <select id="input-final-select" onchange="toggleManualInput('input-final-select', 'input-final-manual')">
+                                        <option value="건강상태, SHOW UP, 여권, ID,&#10;기타 필요항목 지참여부" selected>건강상태, SHOW UP, 여권, ID, 기타 필요항목 지참여부</option>
+                                        <option value="manual">직접입력</option>
+                                    </select>
+                                    <textarea id="input-final-manual" class="hidden" rows="2" placeholder="직접 입력"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function switchTab(tabId) {
+            const btnChecklist = document.getElementById('btn-checklist');
+            const btnBriefing = document.getElementById('btn-briefing');
+            const tabChecklist = document.getElementById('tab-checklist');
+            const tabBriefing = document.getElementById('tab-briefing');
+            
+            if (tabId === 'checklist') {
+                btnChecklist.className = "flex-1 px-6 py-3 rounded-xl font-black transition-all bg-blue-600 text-white shadow-md text-lg uppercase whitespace-nowrap";
+                btnBriefing.className = "flex-1 px-6 py-3 rounded-xl font-black transition-all bg-slate-200 text-slate-600 border border-slate-300 text-lg uppercase whitespace-nowrap";
+                tabChecklist.classList.add('active');
+                tabBriefing.classList.remove('active');
+            } else {
+                btnBriefing.className = "flex-1 px-6 py-3 rounded-xl font-black transition-all bg-blue-600 text-white shadow-md text-lg uppercase whitespace-nowrap";
+                btnChecklist.className = "flex-1 px-6 py-3 rounded-xl font-black transition-all bg-slate-200 text-slate-600 border border-slate-300 text-lg uppercase whitespace-nowrap";
+                tabBriefing.classList.add('active');
+                tabChecklist.classList.remove('active');
+                window.scrollTo(0,0);
+            }
+        }
+
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalItems = document.querySelectorAll('.check-item').length;
+            const checkedItems = document.querySelectorAll('.check-item.checked').length;
+            const percentage = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            progressBar.style.width = percentage + '%';
+            progressText.innerText = percentage + '%';
+            if (percentage === 100) {
+                progressBar.classList.replace('bg-blue-600', 'bg-emerald-500');
+                progressText.classList.replace('text-blue-600', 'text-emerald-600');
+            } else {
+                progressBar.classList.replace('bg-emerald-500', 'bg-blue-600');
+                progressText.classList.replace('text-emerald-600', 'text-blue-600');
+            }
+        }
+
+        function resetAll() {
+            document.querySelectorAll('.check-item').forEach(item => item.classList.remove('checked'));
+            updateProgress();
+        }
+
+        function toggleFlightInput() {
+            const select = document.getElementById('input-flight-select');
+            const manualInput = document.getElementById('input-flight-manual');
+            if (select.value === 'manual') {
+                select.classList.add('hidden');
+                manualInput.classList.remove('hidden');
+                manualInput.focus();
+            }
+        }
+
+        function toggleManualInput(selectId, manualId) {
+            const select = document.getElementById(selectId);
+            const manualInput = document.getElementById(manualId);
+            if (select.value === 'manual') {
+                select.classList.add('hidden');
+                manualInput.classList.remove('hidden');
+                manualInput.focus();
+            } else {
+                manualInput.classList.add('hidden');
+                select.classList.remove('hidden');
+            }
+        }
+
+        // 보안 등급 색상 업데이트 함수
+        function updateSecurityColor() {
+            const select = document.getElementById('input-security');
+            const colors = {
+                'GREEN': '#059669',
+                'BLUE': '#2563eb',
+                'YELLOW': '#d97706',
+                'ORANGE': '#ea580c',
+                'RED': '#dc2626'
+            };
+            select.style.color = colors[select.value] || 'var(--accent-blue)';
+        }
+
+        window.onload = function() {
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            const dateEl = document.getElementById('input-date');
+            if(dateEl) dateEl.value = dateStr;
+            
+            // 초기 보안 등급 색상 적용
+            updateSecurityColor();
+            updateProgress();
+        };
+    </script>
+</body>
+</html>

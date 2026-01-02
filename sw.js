@@ -1,4 +1,4 @@
-const CACHE_NAME = 'site-cache-v1';
+const CACHE_NAME = 'site-cache-v2';
 const FILES_TO_CACHE = [
   '/',              // 루트
   '/index.html',    // 메인 HTML

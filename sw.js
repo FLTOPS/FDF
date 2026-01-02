@@ -1,12 +1,11 @@
 // sw.js
-const CACHE_NAME = "fdf-cache-v1";
+const CACHE_NAME = "fdf-cache-v2";
 const urlsToCache = [
   "/",          // index.html
-  "/index.html",
-  "/styles.css",
-  "/script.js",
-  "/icon.png",   // 앱 아이콘
-  "/offline.html" // 오프라인 안내 페이지 (선택)
+  "./index.html",
+  "./styles.css",
+  "./script.js",
+  "./icon.png",   // 앱 아이콘
 ];
 
 // 설치 단계: 캐시 저장

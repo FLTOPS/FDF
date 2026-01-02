@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight Document Folder</title>
 
-    <!-- PWA manifest 연결 (상대경로) -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+  <!-- 매니페스트 연결 -->
+  <link rel="manifest" href="/manifest.json">
+  <!-- 아이콘 -->
+  <link rel="icon" href="/icon.png">
+  <meta name="theme-color" content="#182749">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -667,5 +669,17 @@
             updateProgress();
         };
     </script>
+
+  <!-- 서비스 워커 등록 스크립트 -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js")
+          .then(reg => console.log("Service Worker registered:", reg))
+          .catch(err => console.error("Service Worker registration failed:", err));
+      });
+    }
+  </script>
+
 </body>
 </html>

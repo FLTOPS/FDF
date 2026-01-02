@@ -1,11 +1,10 @@
-// sw.js
-const CACHE_NAME = "fdf-cache-v2";
+const CACHE_NAME = "fdf-cache-v3";
 const urlsToCache = [
-  "/",          // index.html
+  "./",
   "./index.html",
   "./styles.css",
   "./script.js",
-  "./icon.png",   // 앱 아이콘
+  "./icon.png"
 ];
 
 // 설치 단계: 캐시 저장
@@ -38,22 +37,14 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      // 캐시에 있으면 반환
       if (response) {
         return response;
       }
-
-      // 없으면 네트워크 요청 후 캐시에 저장
       return fetch(event.request).then(networkResponse => {
         return caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, networkResponse.clone());
           return networkResponse;
         });
-      }).catch(() => {
-        // 완전히 오프라인일 때 offline.html 제공
-        if (event.request.destination === "document") {
-          return caches.match("/offline.html");
-        }
       });
     })
   );

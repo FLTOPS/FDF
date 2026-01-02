@@ -11,7 +11,6 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@700;800;900&display=swap');
         
@@ -33,7 +32,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* 아이패드 최적화: 모든 텍스트 굵게 유지 */
         * {
             font-weight: 800 !important;
         }
@@ -108,7 +106,6 @@
             to { opacity: 1; }
         }
 
-        /* Section Header */
         .section-header {
             font-size: 1.5rem;
             font-weight: 900 !important;
@@ -121,17 +118,30 @@
 
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-white border-b-2 border-slate-200 shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-4">
+        <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <h1 class="text-2xl font-black tracking-tighter text-slate-900 uppercase whitespace-nowrap">FLIGHT DOCUMENT FOLDER</h1>
-                <nav class="flex gap-2 w-full lg:w-auto">
-                    <button id="btn-checklist" onclick="switchTab('checklist')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-blue-600 text-white shadow-md text-lg uppercase whitespace-nowrap">
-                        PRE-BRIEFING
+                <div class="flex items-center justify-between w-full lg:w-auto gap-8">
+                    <h1 class="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 uppercase whitespace-nowrap">FLIGHT DOCUMENT FOLDER</h1>
+                    <!-- 모바일용 리셋 버튼 (lg 미만에서 표시) -->
+                    <button onclick="resetAllData()" class="lg:hidden px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-black shadow-sm">
+                        RESET
                     </button>
-                    <button id="btn-briefing" onclick="switchTab('briefing')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-slate-200 text-slate-600 border border-slate-300 text-lg uppercase whitespace-nowrap">
-                        JOINT BRIEFING
+                </div>
+                
+                <div class="flex items-center gap-4 w-full lg:w-auto">
+                    <nav class="flex gap-2 flex-1 lg:flex-none">
+                        <button id="btn-checklist" onclick="switchTab('checklist')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-blue-600 text-white shadow-md text-lg uppercase whitespace-nowrap">
+                            PRE-BRIEFING
+                        </button>
+                        <button id="btn-briefing" onclick="switchTab('briefing')" class="flex-1 px-6 py-3 rounded-xl font-black transition-all bg-slate-200 text-slate-600 border border-slate-300 text-lg uppercase whitespace-nowrap">
+                            JOINT BRIEFING
+                        </button>
+                    </nav>
+                    <!-- 데스크탑용 리셋 버튼 (lg 이상에서 표시) -->
+                    <button onclick="resetAllData()" class="hidden lg:block px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-lg font-black shadow-md transition-colors uppercase">
+                        RESET
                     </button>
-                </nav>
+                </div>
             </div>
         </div>
     </header>
@@ -154,30 +164,30 @@
                 </div>
             </div>
 
-            <div class="space-y-8">
+            <div class="space-y-8" id="checklist-container">
                 <!-- 1. Show up & Alcohol Test -->
                 <section class="bg-white rounded-[2rem] overflow-hidden shadow-soft border-2 border-slate-100">
                     <div class="bg-slate-50 px-6 py-4 border-b-2 border-slate-100">
                         <h3 class="section-header text-slate-800 uppercase">Show up & Alcohol Test</h3>
                     </div>
                     <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c1')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 1 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c2')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 2 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c3')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 1 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)">
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c4')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 2 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl md:col-span-2" onclick="toggleCheck(this)">
+                        <div class="check-item p-4 px-6 rounded-2xl md:col-span-2" onclick="toggleCheck(this, 'c5')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">DH (메일, SMS 수신여부)</span>
                         </div>
@@ -190,15 +200,15 @@
                         <h3 class="section-header text-slate-800">필수 휴대품목 점검</h3>
                     </div>
                     <div class="p-3 space-y-2">
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공면장 / EPTA</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">신체검사증명서</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공 무선 통신사 자격증 (유효일자)</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여권 / VISA</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">회사 ID / 승무원등록증</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAT II/III Certificate</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Portable EFB Update (충전상태 80% 이상)</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Flash Light (기장)</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여분의 안경 (해당 승무원)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p1')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공면장 / EPTA</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p2')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">신체검사증명서</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p3')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">항공 무선 통신사 자격증 (유효일자)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p4')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여권 / VISA</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p5')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">회사 ID / 승무원등록증</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p6')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAT II/III Certificate</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p7')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Portable EFB Update (충전상태 80% 이상)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p8')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">Flash Light (기장)</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'p9')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800 whitespace-nowrap">여분의 안경 (해당 승무원)</span></div>
                     </div>
                 </section>
 
@@ -208,12 +218,12 @@
                         <h3 class="section-header text-slate-800">운항 Briefing 확인사항</h3>
                     </div>
                     <div class="p-3 space-y-2">
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">기상 (출발지, 목적지, 교체공항) </span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">NOTAM </span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">OFP</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">부정기 운항 시 영공통과 허가번호</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">목적지 Landing Permission No</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">최근 공시(Notice) 확인</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b1')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">기상 (출발지, 목적지, 교체공항) </span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b2')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">NOTAM </span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b3')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">OFP</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b4')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">부정기 운항 시 영공통과 허가번호</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b5')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">목적지 Landing Permission No</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'b6')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">최근 공시(Notice) 확인</span></div>
                     </div>
                 </section>
 
@@ -223,23 +233,23 @@
                         <h3 class="section-header text-slate-800">개인별 이/착륙 만료 예정일 점검</h3>
                     </div>
                     <div class="p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm1')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">CAPT 1</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm2')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">CAPT 2</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm3')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">F/O 1</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm4')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">F/O 2</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this)">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm5')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">DH</span>
                         </div>
@@ -252,16 +262,10 @@
                         <h3 class="section-header text-slate-800">건강상태 확인</h3>
                     </div>
                     <div class="p-3 space-y-2">
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 금지 의약품 복용 여부</span></div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this)"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 수행 적합 상태 (신체적,정신적 )</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'h1')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 금지 의약품 복용 여부</span></div>
+                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'h2')"><div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><span class="text-lg font-bold text-slate-800">비행임무 수행 적합 상태 (신체적,정신적 )</span></div>
                     </div>
                 </section>
-
-                <div class="flex justify-center pt-4">
-                    <button onclick="resetAll()" class="px-10 py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-black rounded-2xl transition-all border-2 border-slate-300 text-lg uppercase shadow-md">
-                        RESET ALL CHECKLIST
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -275,7 +279,7 @@
                     JOINT BRIEFING
                 </h2>
 
-                <div class="space-y-10">
+                <div class="space-y-10" id="briefing-container">
                     <div class="grid grid-cols-2 gap-6">
                         <div class="input-group">
                             <label>날짜 (DATE)</label>
@@ -335,8 +339,6 @@
                             <label>PAX</label>
                             <input type="number" id="input-pax" placeholder="0">
                         </div>
-                        
-                        <!-- 보안 등급: 각 옵션 및 선택된 상태에 색상 적용 -->
                         <div class="input-group">
                             <label>보안 등급</label>
                             <select id="input-security" onchange="updateSecurityColor()">
@@ -347,13 +349,11 @@
                                 <option value="RED" style="color: #dc2626;">RED</option>
                             </select>
                         </div>
-                        
                         <div class="input-group">
                             <label>고도 (ALTITUDE - FL)</label>
                             <div class="flex flex-col gap-2">
                                 <select id="input-altitude" onchange="toggleManualInput('input-altitude', 'input-altitude-manual')">
-                                    <option value="FL290">FL290</option><option value="FL300">FL300</option><option value="FL310">FL310</option><option value="FL320">FL320</option><option value="FL330">FL330</option><option value="FL340">FL340</option>
-                                    <option value="FL350">FL350</option>
+                                    <option value="FL290">FL290</option><option value="FL300">FL300</option><option value="FL310">FL310</option><option value="FL320">FL320</option><option value="FL330">FL330</option><option value="FL340">FL340</option><option value="FL350">FL350</option>
                                     <option value="manual">직접입력</option>
                                     <option value="FL360">FL360</option><option value="FL370">FL370</option><option value="FL380">FL380</option><option value="FL390">FL390</option><option value="FL400">FL400</option><option value="FL410">FL410</option>
                                 </select>
@@ -375,7 +375,6 @@
 
                     <hr class="border-t-2 border-slate-100">
 
-                    <!-- Weather Information -->
                     <div>
                         <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Weather Information</h3>
                         <div class="space-y-6">
@@ -412,14 +411,13 @@
 
                     <hr class="border-t-2 border-slate-100">
 
-                    <!-- Additional Procedures -->
                     <div>
                         <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Additional Procedures</h3>
                         <div class="space-y-6">
                             <div class="input-group"><label>PASSENGER SIGN</label><input type="text" id="input-pax-sign" placeholder="이륙/착륙 시 승객 사인 절차"></div>
                             
                             <div class="input-group">
-                                <label>조종실 출입 절차 (COCKPIT ENTRY PROCEDURE)</label>
+                                <label>조종실 출입 절차</label>
                                 <div class="space-y-2">
                                     <select id="input-cockpit-select" onchange="toggleManualInput('input-cockpit-select', 'input-cockpit-manual')">
                                         <option value="Normal Procedure" selected>Normal Procedure</option><option value="manual">직접입력</option>
@@ -483,6 +481,9 @@
     </main>
 
     <script>
+        const STORAGE_KEY_INPUTS = 'flight_doc_inputs';
+        const STORAGE_KEY_CHECKLIST = 'flight_doc_checklist';
+
         function switchTab(tabId) {
             const btnChecklist = document.getElementById('btn-checklist');
             const btnBriefing = document.getElementById('btn-briefing');
@@ -503,8 +504,9 @@
             }
         }
 
-        function toggleCheck(element) {
+        function toggleCheck(element, id) {
             element.classList.toggle('checked');
+            saveChecklistData();
             updateProgress();
         }
 
@@ -514,20 +516,99 @@
             const percentage = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
-            progressBar.style.width = percentage + '%';
-            progressText.innerText = percentage + '%';
-            if (percentage === 100) {
-                progressBar.classList.replace('bg-blue-600', 'bg-emerald-500');
-                progressText.classList.replace('text-blue-600', 'text-emerald-600');
-            } else {
-                progressBar.classList.replace('bg-emerald-500', 'bg-blue-600');
-                progressText.classList.replace('text-emerald-600', 'text-blue-600');
+            
+            if(progressBar && progressText) {
+                progressBar.style.width = percentage + '%';
+                progressText.innerText = percentage + '%';
+                if (percentage === 100) {
+                    progressBar.classList.replace('bg-blue-600', 'bg-emerald-500');
+                    progressText.classList.replace('text-blue-600', 'text-emerald-600');
+                } else {
+                    progressBar.classList.replace('bg-emerald-500', 'bg-blue-600');
+                    progressText.classList.replace('text-emerald-600', 'text-blue-600');
+                }
             }
         }
 
-        function resetAll() {
-            document.querySelectorAll('.check-item').forEach(item => item.classList.remove('checked'));
+        function saveChecklistData() {
+            const checkedStates = [];
+            document.querySelectorAll('.check-item').forEach((item, index) => {
+                if (item.classList.contains('checked')) {
+                    checkedStates.push(index);
+                }
+            });
+            localStorage.setItem(STORAGE_KEY_CHECKLIST, JSON.stringify(checkedStates));
+        }
+
+        function saveInputsData() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            const data = {};
+            inputs.forEach(input => {
+                if (input.id) {
+                    data[input.id] = {
+                        value: input.value,
+                        hidden: input.classList.contains('hidden')
+                    };
+                }
+            });
+            localStorage.setItem(STORAGE_KEY_INPUTS, JSON.stringify(data));
+        }
+
+        function loadSavedData() {
+            const savedChecklist = localStorage.getItem(STORAGE_KEY_CHECKLIST);
+            if (savedChecklist) {
+                const checkedIndices = JSON.parse(savedChecklist);
+                const items = document.querySelectorAll('.check-item');
+                checkedIndices.forEach(index => {
+                    if (items[index]) items[index].classList.add('checked');
+                });
+            }
+
+            const savedInputs = localStorage.getItem(STORAGE_KEY_INPUTS);
+            if (savedInputs) {
+                const data = JSON.parse(savedInputs);
+                for (const id in data) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.value = data[id].value;
+                        if (data[id].hidden) {
+                            el.classList.add('hidden');
+                        } else {
+                            el.classList.remove('hidden');
+                        }
+                    }
+                }
+            }
+            updateSecurityColor();
             updateProgress();
+        }
+
+        function resetAllData() {
+            if (confirm("모든 입력값과 체크리스트를 초기화하시겠습니까?")) {
+                localStorage.removeItem(STORAGE_KEY_INPUTS);
+                localStorage.removeItem(STORAGE_KEY_CHECKLIST);
+                
+                // UI 초기화
+                document.querySelectorAll('.check-item').forEach(item => item.classList.remove('checked'));
+                document.querySelectorAll('input:not([type="date"])').forEach(input => input.value = "");
+                document.querySelectorAll('textarea').forEach(tx => tx.value = "");
+                document.querySelectorAll('select').forEach(sel => {
+                    sel.selectedIndex = 0;
+                    sel.classList.remove('hidden');
+                });
+                
+                // 수동 입력창 숨기기
+                document.querySelectorAll('[id$="-manual"]').forEach(el => el.classList.add('hidden'));
+
+                // 날짜 오늘로 재설정
+                const today = new Date().toISOString().split('T')[0];
+                const dateEl = document.getElementById('input-date');
+                if(dateEl) dateEl.value = today;
+
+                updateSecurityColor();
+                updateProgress();
+                saveInputsData(); 
+            }
         }
 
         function toggleFlightInput() {
@@ -538,6 +619,7 @@
                 manualInput.classList.remove('hidden');
                 manualInput.focus();
             }
+            saveInputsData();
         }
 
         function toggleManualInput(selectId, manualId) {
@@ -551,11 +633,12 @@
                 manualInput.classList.add('hidden');
                 select.classList.remove('hidden');
             }
+            saveInputsData();
         }
 
-        // 보안 등급 색상 업데이트 함수
         function updateSecurityColor() {
             const select = document.getElementById('input-security');
+            if (!select) return;
             const colors = {
                 'GREEN': '#059669',
                 'BLUE': '#2563eb',
@@ -567,13 +650,20 @@
         }
 
         window.onload = function() {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            const dateEl = document.getElementById('input-date');
-            if(dateEl) dateEl.value = dateStr;
+            loadSavedData();
             
-            // 초기 보안 등급 색상 적용
-            updateSecurityColor();
+            const dateEl = document.getElementById('input-date');
+            if(dateEl && !dateEl.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateEl.value = today;
+            }
+
+            document.addEventListener('input', (e) => {
+                if (e.target.matches('input, select, textarea')) {
+                    saveInputsData();
+                }
+            });
+
             updateProgress();
         };
     </script>

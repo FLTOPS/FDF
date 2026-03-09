@@ -1,6 +1,6 @@
 {
-  "name": "FDF App",
-  "short_name": "FDF",
+  "name": "CTC App",
+  "short_name": "CTC",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",

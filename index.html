@@ -6,9 +6,9 @@
     <title>Flight Document Folder</title>
 
   <!-- 매니페스트 연결 -->
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="manifest.json">
   <!-- 아이콘 -->
-  <link rel="icon" href="./icon.png">
+  <link rel="icon" href="icon.png">
   <meta name="theme-color" content="#182749">
 
     <!-- Tailwind CSS -->
@@ -76,9 +76,10 @@
 
         /* Briefing Inputs */
         .input-group label {
-            font-size: 1.15rem; 
-            color: #1e293b;
-            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+            color: #64748b;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
             display: block;
             text-transform: uppercase;
         }
@@ -86,13 +87,46 @@
         .input-group select, 
         .input-group textarea {
             background-color: #ffffff;
-            border: 2px solid var(--border-color);
-            color: var(--accent-blue);
-            font-size: 1.15rem; 
-            border-radius: 0.75rem;
-            padding: 0.8rem;
+            border: 2.5px solid #94a3b8;
+            color: #0f172a;
+            font-size: 1.15rem;
+            border-radius: 1rem;
+            padding: 0.85rem 1rem;
             width: 100%;
             outline: none;
+            min-height: 3rem;
+        }
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
+        .input-group select {
+            color: #1e40af;
+        }
+
+        /* ── JOINT BRIEFING 전용 대형 글씨 (iPad 가시성) ── */
+        #tab-briefing .input-group label {
+            font-size: 1.5rem;
+            color: #475569;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.7rem;
+            font-weight: 900 !important;
+        }
+        #tab-briefing .input-group input,
+        #tab-briefing .input-group select,
+        #tab-briefing .input-group textarea {
+            font-size: 1.85rem;
+            padding: 1.1rem 1.25rem;
+            min-height: 4rem;
+            border-radius: 1.1rem;
+            border-width: 3px;
+        }
+        #tab-briefing .input-group input::placeholder,
+        #tab-briefing .input-group textarea::placeholder {
+            font-size: 1.45rem;
+            color: #94a3b8;
         }
 
         /* Tabs */
@@ -113,6 +147,17 @@
             font-weight: 900 !important;
             border-left: 6px solid var(--accent-blue);
             padding-left: 0.8rem;
+        }
+
+        .crew-disabled {
+            opacity: 0.28;
+            pointer-events: none;
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .crew-btn {
+            transition: all 0.15s ease;
         }
     </style>
 </head>
@@ -154,6 +199,16 @@
         <div id="tab-checklist" class="tab-content active">
             <!-- Progress Tracker -->
             <div class="mb-8 bg-white p-6 rounded-[2rem] shadow-soft border-2 border-slate-100">
+                <!-- 승무인원 선택 -->
+                <div class="flex items-center gap-3 mb-5 pb-5 border-b-2 border-slate-100">
+                    <span class="text-sm font-black text-slate-500 uppercase whitespace-nowrap">승무인원</span>
+                    <div class="flex gap-2">
+                        <button onclick="setCrewCount(2)" id="crew-btn-2" class="crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-blue-600 text-white border-blue-600">2명</button>
+                        <button onclick="setCrewCount(3)" id="crew-btn-3" class="crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-white text-slate-600 border-slate-300">3명</button>
+                        <button onclick="setCrewCount(4)" id="crew-btn-4" class="crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-white text-slate-600 border-slate-300">4명</button>
+                        <button onclick="setCrewCount(5)" id="crew-btn-5" class="crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-white text-slate-600 border-slate-300">5명</button>
+                    </div>
+                </div>
                 <div class="flex justify-between items-end mb-4">
                     <div>
                         <h2 class="text-lg font-black text-slate-900 uppercase">CHECKLIST PROGRESS</h2>
@@ -173,23 +228,23 @@
                         <h3 class="section-header text-slate-800 uppercase">Show up & Alcohol Test</h3>
                     </div>
                     <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c1')">
+                        <div class="check-item p-4 px-6 rounded-2xl" data-crew-slot="1" onclick="toggleCheck(this, 'c1')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 1 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c2')">
+                        <div class="check-item p-4 px-6 rounded-2xl" data-crew-slot="3" onclick="toggleCheck(this, 'c2')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">CAPT 2 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c3')">
+                        <div class="check-item p-4 px-6 rounded-2xl" data-crew-slot="2" onclick="toggleCheck(this, 'c3')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 1 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl" onclick="toggleCheck(this, 'c4')">
+                        <div class="check-item p-4 px-6 rounded-2xl" data-crew-slot="4" onclick="toggleCheck(this, 'c4')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">F/O 2 (메일, SMS 수신여부)</span>
                         </div>
-                        <div class="check-item p-4 px-6 rounded-2xl md:col-span-2" onclick="toggleCheck(this, 'c5')">
+                        <div class="check-item p-4 px-6 rounded-2xl md:col-span-2" data-crew-slot="5" onclick="toggleCheck(this, 'c5')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mr-5 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-bold text-slate-800 whitespace-nowrap">DH (메일, SMS 수신여부)</span>
                         </div>
@@ -235,23 +290,23 @@
                         <h3 class="section-header text-slate-800">개인별 이/착륙 만료 예정일 점검</h3>
                     </div>
                     <div class="p-4 grid grid-cols-2 md:grid-cols-5 gap-3">
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm1')">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" data-crew-slot="1" onclick="toggleCheck(this, 'm1')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">CAPT 1</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm2')">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" data-crew-slot="3" onclick="toggleCheck(this, 'm2')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">CAPT 2</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm3')">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" data-crew-slot="2" onclick="toggleCheck(this, 'm3')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">F/O 1</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm4')">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" data-crew-slot="4" onclick="toggleCheck(this, 'm4')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">F/O 2</span>
                         </div>
-                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" onclick="toggleCheck(this, 'm5')">
+                        <div class="check-item flex-col items-center justify-center p-6 rounded-3xl" data-crew-slot="5" onclick="toggleCheck(this, 'm5')">
                             <div class="checkbox-box w-8 h-8 rounded-lg mb-3 flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div>
                             <span class="text-lg font-black text-slate-800">DH</span>
                         </div>
@@ -274,28 +329,28 @@
         <!-- Tab 2: JOINT BRIEFING -->
         <div id="tab-briefing" class="tab-content">
             <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-soft border-2 border-slate-100">
-                <h2 class="text-3xl font-black text-slate-900 mb-8 flex items-center gap-4 uppercase">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <h2 class="text-5xl font-black text-slate-900 mb-10 flex items-center gap-4 uppercase tracking-tight">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     JOINT BRIEFING
                 </h2>
 
                 <div class="space-y-10" id="briefing-container">
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="input-group">
+                    <div style="display:flex; gap:1.5rem; align-items:flex-start;">
+                        <div class="input-group" style="flex:1;">
                             <label>날짜 (DATE)</label>
-                            <input type="date" id="input-date">
+                            <input type="date" id="input-date" style="font-size:1.85rem; padding:1.1rem 1rem; box-sizing:border-box; width:100%; -webkit-appearance:none; appearance:none; display:block;">
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" style="flex:1;">
                             <label>편명 (FLIGHT NO.)</label>
-                            <div class="flex">
-                                <span class="bg-slate-100 border-2 border-slate-300 border-r-0 rounded-l-xl px-4 flex items-center text-lg font-black text-slate-600">YP</span>
-                                <select id="input-flight-select" class="rounded-l-none" onchange="toggleFlightInput()">
+                            <div id="yp-wrapper" style="display:flex; align-items:stretch; border:3px solid #94a3b8; border-radius:1.1rem; overflow:hidden; background:#fff;">
+                                <span style="background:#f1f5f9; padding:1.1rem 1.25rem; display:flex; align-items:center; font-size:1.85rem; font-weight:900; color:#334155; border-right:3px solid #94a3b8; white-space:nowrap; letter-spacing:0.04em;">YP</span>
+                                <select id="input-flight-select" onchange="toggleFlightInput()" style="border:none; outline:none; flex:1; font-size:1.85rem; font-weight:800; color:#1e40af; padding:1.1rem 1rem; background:transparent;">
                                     <option value="101">101</option><option value="102">102</option><option value="103">103</option><option value="104">104</option><option value="111">111</option><option value="112">112</option><option value="131">131</option><option value="132">132</option><option value="151">151</option><option value="152">152</option><option value="601">601</option><option value="602">602</option><option value="621">621</option><option value="622">622</option><option value="651">651</option><option value="652">652</option><option value="731">731</option><option value="732">732</option><option value="801">801</option><option value="802">802</option><option value="5201">5201</option><option value="5202">5202</option><option value="5211">5211</option><option value="5212">5212</option><option value="5245">5245</option><option value="5246">5246</option><option value="5623">5623</option><option value="5624">5624</option><option value="5671">5671</option><option value="5672">5672</option>
                                     <option value="manual">직접입력</option>
                                 </select>
-                                <input type="text" id="input-flight-manual" class="hidden rounded-l-none" placeholder="번호 입력">
+                                <input type="text" id="input-flight-manual" class="hidden" placeholder="번호 입력" style="border:none; outline:none; flex:1; font-size:1.85rem; font-weight:800; color:#1e40af; padding:1.1rem 1rem; background:transparent;">
                             </div>
                         </div>
                     </div>
@@ -313,7 +368,7 @@
                         </div>
                     </div>
 
-                    <hr class="border-t-2 border-slate-100">
+                    <hr class="border-t-4 border-slate-200">
 
                     <div class="grid grid-cols-2 gap-8">
                         <div class="input-group">
@@ -334,7 +389,7 @@
                         </div>
                     </div>
 
-                    <hr class="border-t-2 border-slate-100">
+                    <hr class="border-t-4 border-slate-200">
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="input-group">
@@ -375,10 +430,10 @@
                         </div>
                     </div>
 
-                    <hr class="border-t-2 border-slate-100">
+                    <hr class="border-t-4 border-slate-200">
 
                     <div>
-                        <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Weather Information</h3>
+                        <h3 class="text-4xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Weather Information</h3>
                         <div class="space-y-6">
                             <div class="grid grid-cols-2 gap-6">
                                 <div class="input-group">
@@ -411,10 +466,10 @@
                         </div>
                     </div>
 
-                    <hr class="border-t-2 border-slate-100">
+                    <hr class="border-t-4 border-slate-200">
 
                     <div>
-                        <h3 class="text-2xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Additional Procedures</h3>
+                        <h3 class="text-4xl font-black text-slate-900 uppercase mb-6 tracking-widest border-l-8 border-blue-600 pl-4">Additional Procedures</h3>
                         <div class="space-y-6">
                             <div class="input-group"><label>PASSENGER SIGN</label><input type="text" id="input-pax-sign" placeholder="이륙/착륙 시 승객 사인 절차"></div>
                             
@@ -480,11 +535,56 @@
             </div>
         </div>
 
+
+    <!-- Reset 확인 모달 -->
+    <div id="reset-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(15,23,42,0.55);">
+        <div class="bg-white rounded-3xl shadow-2xl p-10 mx-6 max-w-sm w-full text-center border-2 border-slate-200">
+            <div class="text-5xl mb-4">⚠️</div>
+            <h3 class="text-2xl font-black text-slate-900 mb-3">초기화 하시겠습니까?</h3>
+            <p class="text-slate-500 text-lg mb-8">모든 입력값과 체크리스트가<br>삭제됩니다.</p>
+            <div class="flex gap-3">
+                <button onclick="cancelReset()" class="flex-1 py-4 rounded-2xl text-xl font-black bg-slate-100 text-slate-600 border-2 border-slate-200">취소</button>
+                <button onclick="confirmReset()" class="flex-1 py-4 rounded-2xl text-xl font-black bg-red-600 text-white">RESET</button>
+            </div>
+        </div>
+    </div>
+
     </main>
 
     <script>
         const STORAGE_KEY_INPUTS = 'flight_doc_inputs';
         const STORAGE_KEY_CHECKLIST = 'flight_doc_checklist';
+        const STORAGE_KEY_CREW = 'flight_doc_crew';
+
+        function setCrewCount(n) {
+            localStorage.setItem(STORAGE_KEY_CREW, n);
+            applyCrewCount(n);
+        }
+
+        function applyCrewCount(n) {
+            // 버튼 스타일 업데이트
+            for (let i = 2; i <= 5; i++) {
+                const btn = document.getElementById('crew-btn-' + i);
+                if (!btn) continue;
+                if (i === n) {
+                    btn.className = 'crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-blue-600 text-white border-blue-600';
+                } else {
+                    btn.className = 'crew-btn px-4 py-2 rounded-xl text-sm font-black border-2 bg-white text-slate-600 border-slate-300';
+                }
+            }
+            // 슬롯 기준: 1=CAPT1, 2=F/O1, 3=CAPT2, 4=F/O2, 5=DH
+            document.querySelectorAll('[data-crew-slot]').forEach(item => {
+                const slot = parseInt(item.getAttribute('data-crew-slot'));
+                if (slot > n) {
+                    item.classList.add('crew-disabled');
+                    item.classList.remove('checked');
+                } else {
+                    item.classList.remove('crew-disabled');
+                }
+            });
+            updateProgress();
+            saveChecklistData();
+        }
 
         function switchTab(tabId) {
             const btnChecklist = document.getElementById('btn-checklist');
@@ -513,8 +613,8 @@
         }
 
         function updateProgress() {
-            const totalItems = document.querySelectorAll('.check-item').length;
-            const checkedItems = document.querySelectorAll('.check-item.checked').length;
+            const totalItems = document.querySelectorAll('.check-item:not(.crew-disabled)').length;
+            const checkedItems = document.querySelectorAll('.check-item.checked:not(.crew-disabled)').length;
             const percentage = totalItems > 0 ? Math.round((checkedItems / totalItems) * 100) : 0;
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
@@ -583,34 +683,38 @@
             }
             updateSecurityColor();
             updateProgress();
+            const savedCrew = localStorage.getItem(STORAGE_KEY_CREW);
+            applyCrewCount(savedCrew ? parseInt(savedCrew) : 2);
         }
 
         function resetAllData() {
-            if (confirm("모든 입력값과 체크리스트를 초기화하시겠습니까?")) {
-                localStorage.removeItem(STORAGE_KEY_INPUTS);
-                localStorage.removeItem(STORAGE_KEY_CHECKLIST);
-                
-                // UI 초기화
-                document.querySelectorAll('.check-item').forEach(item => item.classList.remove('checked'));
-                document.querySelectorAll('input:not([type="date"])').forEach(input => input.value = "");
-                document.querySelectorAll('textarea').forEach(tx => tx.value = "");
-                document.querySelectorAll('select').forEach(sel => {
-                    sel.selectedIndex = 0;
-                    sel.classList.remove('hidden');
-                });
-                
-                // 수동 입력창 숨기기
-                document.querySelectorAll('[id$="-manual"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
 
-                // 날짜 오늘로 재설정
-                const today = new Date().toISOString().split('T')[0];
-                const dateEl = document.getElementById('input-date');
-                if(dateEl) dateEl.value = today;
+        function confirmReset() {
+            document.getElementById('reset-modal').classList.add('hidden');
+            localStorage.removeItem(STORAGE_KEY_INPUTS);
+            localStorage.removeItem(STORAGE_KEY_CHECKLIST);
+            localStorage.removeItem(STORAGE_KEY_CREW);
+            document.querySelectorAll('.check-item').forEach(item => item.classList.remove('checked'));
+            document.querySelectorAll('input:not([type="date"])').forEach(input => input.value = "");
+            document.querySelectorAll('textarea').forEach(tx => tx.value = "");
+            document.querySelectorAll('select').forEach(sel => {
+                sel.selectedIndex = 0;
+                sel.classList.remove('hidden');
+            });
+            document.querySelectorAll('[id$="-manual"]').forEach(el => el.classList.add('hidden'));
+            const today = new Date().toISOString().split('T')[0];
+            const dateEl = document.getElementById('input-date');
+            if(dateEl) dateEl.value = today;
+            updateSecurityColor();
+            updateProgress();
+            applyCrewCount(2);
+            saveInputsData();
+        }
 
-                updateSecurityColor();
-                updateProgress();
-                saveInputsData(); 
-            }
+        function cancelReset() {
+            document.getElementById('reset-modal').classList.add('hidden');
         }
 
         function toggleFlightInput() {
